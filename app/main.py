@@ -27,6 +27,8 @@ def type_handler(arguments):
         if not found:
             print(f"{command_to_check}: not found")
 
+def pwd_handler(arguments):
+    print(os.getcwd())
 
 
 PATHS = os.environ.get('PATH','').split(os.pathsep)
@@ -35,6 +37,7 @@ DISPATCHER = {
         'exit': exit_handler,
         'echo': echo_handler,
         'type': type_handler,
+        'pwd': pwd_handler,
     }
 
 
