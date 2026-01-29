@@ -4,10 +4,14 @@ import sys
 def main():
     
     while True:
-        cmd = input('$ ')
-        if cmd.strip() == 'exit':
+        cmd = input('$ ').strip()
+
+        if cmd == 'exit':
             break
-        print(f"{cmd}: command not found")
+        elif cmd[:4] == 'echo':
+            print(cmd[5:])
+        else:
+            print(f"{cmd}: command not found")
 
 if __name__ == "__main__":
     main()
