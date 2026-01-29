@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 def exit_handler(arguments):
     sys.exit()
@@ -53,7 +54,16 @@ def dispatch_command(command, arguments):
     if command in DISPATCHER:
         DISPATCHER[command](arguments)
     else:
-        print(f'{command}: command not found')
+        found = False
+        for path in PATHS:
+            full_path = os.path.join(path,command)
+            if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+                found = True
+                break
+        if found:
+            subprocess.run([command] + arguments)
+        else:
+            print(f'{command}: command not found')
 
 
 def main():
