@@ -1,24 +1,70 @@
 import sys
+import os
+
+def exit_handler(arguments):
+    sys.exit()
+
+def echo_handler(arguments):
+    output = ' '.join(arguments)
+    print(output)
+
+def type_handler(arguments):
+    if not arguments:
+        return
+    command_to_check = arguments[0]
+
+    if command_to_check in DISPATCHER:
+        print(f'{command_to_check} is a shell builtin')
+    else:
+        found = False
+        for path in PATHS:
+            full_path = os.path.join(path,command_to_check)
+            if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+                print(f'{command_to_check} is {full_path}')
+                found = True
+                break
+        if not found:
+            print(f"{command_to_check}: not found")
+
+
+
+PATHS = os.environ.get('PATH','').split(os.pathsep)
+
+DISPATCHER = {
+        'exit': exit_handler,
+        'echo': echo_handler,
+        'type': type_handler,
+    }
+
+
+def read_command():
+    cmd = input('$ ').strip()
+    if not cmd:
+        return None, None
+    tokens = cmd.split()
+    command = tokens[0]
+    arguments = tokens[1:]
+    return command, arguments
+
+def dispatch_command(command, arguments):
+    if not command:
+        return
+    
+    if command in DISPATCHER:
+        DISPATCHER[command](arguments)
+    else:
+        print(f'{command}: command not found')
 
 
 def main():
-    
-    builtin = ['exit','echo','type']
     while True:
-        cmd = input('$ ').strip()
+        command, arguments = read_command()
+        dispatch_command(command, arguments)
 
-        if cmd == 'exit':
-            break
-        elif cmd[:4] == 'echo':
-            print(cmd[5:])
-        elif cmd[:4] == 'type':
-            command_to_check = cmd[5:]
-            if command_to_check in builtin:
-                print(f"{command_to_check} is a shell builtin")
-            else:
-                print(f"{command_to_check} not found")
-        else:
-            print(f"{cmd}: command not found")
+
+    
+
+
 
 if __name__ == "__main__":
     main()
