@@ -30,8 +30,15 @@ def type_handler(arguments):
 def pwd_handler(arguments):
     print(os.getcwd())
 
-def cd_handler(arguements):
-    path = arguements[0]
+def cd_handler(arguments):
+    if not arguments:
+        return 
+
+    if arguments[0] == '~':
+        path = os.getenv('HOME')
+    else:
+        path = arguments[0]
+
     try:
         os.chdir(path)
     except OSError:
