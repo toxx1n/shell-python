@@ -30,6 +30,13 @@ def type_handler(arguments):
 def pwd_handler(arguments):
     print(os.getcwd())
 
+def cd_handler(arguements):
+    path = arguements[0]
+    try:
+        os.chdir(path)
+    except OSError:
+        print(f'cd: {path}: No such file or directory')
+
 
 PATHS = os.environ.get('PATH','').split(os.pathsep)
 
@@ -38,6 +45,7 @@ DISPATCHER = {
         'echo': echo_handler,
         'type': type_handler,
         'pwd': pwd_handler,
+        'cd': cd_handler,
     }
 
 
